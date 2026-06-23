@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Parohia Mea",
+    "slug": "parohia-mea",
+    "scheme": "parohiamea",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
