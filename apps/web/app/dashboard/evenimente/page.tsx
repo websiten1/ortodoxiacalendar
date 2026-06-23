@@ -57,13 +57,12 @@ export default function DashboardEvenimentePage() {
 
   async function markNotificationSent(eventId: string) {
     if (!supabase) return;
-    const { error: updateError } = await supabase
-      .from("evenimente_locale")
-      .update({ notificare_trimisa: true })
-      .eq("id", eventId);
+    const { error: invokeError } = await supabase.functions.invoke("send-event-notifications", {
+      body: { eventId }
+    });
 
-    if (updateError) {
-      setError(updateError.message);
+    if (invokeError) {
+      setError(invokeError.message);
       return;
     }
 

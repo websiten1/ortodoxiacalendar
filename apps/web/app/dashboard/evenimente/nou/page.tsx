@@ -31,18 +31,28 @@ export default function DashboardEvenimentNouPage() {
     setSubmitting(true);
     try {
       const session = await getParishSession(supabase);
-      const { error: insertError } = await supabase.from("evenimente_locale").insert({
-        parohie_id: session.parishId,
-        titlu: form.titlu,
-        descriere: form.descriere || null,
-        data: form.data,
-        ora: form.ora || null,
-        tip: form.tip,
-        notificare_trimisa: form.trimiteNotificare ? false : true
-      });
+      const { data: inserted, error: insertError } = await supabase
+        .from("evenimente_locale")
+        .insert({
+          parohie_id: session.parishId,
+          titlu: form.titlu,
+          descriere: form.descriere || null,
+          data: form.data,
+          ora: form.ora || null,
+          tip: form.tip,
+          notificare_trimisa: form.trimiteNotificare ? false : true
+        })
+        .select("id")
+        .single();
 
       if (insertError) {
         throw new Error(insertError.message);
+      }
+
+      if (form.trimiteNotificare && inserted) {
+        await supabase.functions.invoke("send-event-notifications", {
+          body: { eventId: inserted.id }
+        });
       }
 
       router.push("/dashboard/evenimente");

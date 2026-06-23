@@ -1,78 +1,87 @@
 # Parohia Mea
 
-Scaffold inițial bazat pe `SPEC-FUNCTIONALA-BUILD.md`.
-
-## Ce am creat acum
-
-- Structura inițială de proiect în folderul `parohia-mea`
-- Script de preluare calendar zilnic din sursa Patriarhiei
-- Structură monorepo pentru web + mobile
-- Migrații Supabase (schema + RLS + seed)
-- Fișiere JSON generate pentru utilizare în seed/backend
+MVP construit conform `docs/SPEC-FUNCTIONALA-BUILD.md`. Toate cele 8 etape din `docs/IMPLEMENTARE.md` (schema, admin web, app mobilă, auth, calendar combinat, push) sunt implementate în cod. Ce rămâne sunt pașii legați de cont (Supabase, Apple/Google) descriși mai jos — nu pot fi automatizați fără credențialele tale.
 
 ## Structură
 
-- `scripts/` - utilitare de bootstrap/import date
-- `data/calendar/` - date calendar normalizate pe zile
-- `apps/web/` - Next.js admin web (rute MVP din specificație)
-- `apps/mobile/` - Expo app mobilă (tabs + profil parohie)
-- `supabase/migrations/` - schema SQL, RLS și seed liturgic
-- `docs/` - documentație de implementare
+- `scripts/` — utilitare de bootstrap/import date liturgice
+- `data/calendar/` — date calendar normalizate pe zile (din Patriarhia)
+- `apps/web/` — Next.js admin web (toate ecranele din Partea 1 a spec.)
+- `apps/mobile/` — Expo app mobilă (toate ecranele din Partea 2 a spec.)
+- `supabase/migrations/` — schema SQL, RLS, storage, seed liturgic
+- `supabase/functions/send-event-notifications/` — Edge Function push (Partea 3.5)
+- `docs/` — specificație + plan de implementare
 
-## Comenzi principale
+## 1. Creează proiectul Supabase
 
-```bash
-npm run fetch:calendar
-npm run seed:calendar:sql
-npm run dev:web
-npm run dev:mobile
-```
+1. [supabase.com](https://supabase.com) → New project.
+2. Activează autentificarea **Email (magic link)** și **Phone (SMS OTP)** din Auth → Providers (Phone necesită un provider SMS, ex. Twilio — configurează-l acolo).
+3. Instalează CLI-ul și conectează proiectul:
 
-## Pornire rapidă (doar aplicația de telefon)
+   ```bash
+   npm install -g supabase
+   supabase login
+   supabase link --project-ref <project-ref>
+   ```
 
-```bash
-cd ~/Downloads/parohia-mea
-npm install
-npm run dev:mobile
-```
+4. Aplică toate migrațiile (schema, RLS, storage, seed):
 
-Apoi:
+   ```bash
+   supabase db push
+   ```
 
-- apasă `i` în terminal pentru iOS Simulator (Mac)
-- sau scanează QR cu Expo Go pe telefon
+## 2. Variabile de mediu
 
-## Environment variables (web)
-
-Creează `apps/web/.env.local`:
+**Web** — `apps/web/.env.local`:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
-## Import calendar Patriarhia
-
-Rulează:
+**Mobile** — `apps/mobile/.env`:
 
 ```bash
-npm run fetch:calendar
+EXPO_PUBLIC_SUPABASE_URL=...
+EXPO_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
-Scriptul:
+(vezi și `.env.example` în fiecare folder)
 
-1. descarcă pagina [calendar.patriarhia.ro](https://calendar.patriarhia.ro/#august)
-2. extrage obiectul JS `copData.calendarData`
-3. normalizează intrările pe zile pentru fiecare lună
-4. scrie două fișiere:
-   - `data/calendar/patriarhia-calendar-data.json` (structura originală pe luni)
-   - `data/calendar/patriarhia-calendar-flat.json` (listă flat, o intrare pe zi)
-
-## Seed Supabase din calendar
+## 3. Deploy Edge Function pentru notificări push
 
 ```bash
-npm run seed:calendar:sql
+supabase functions deploy send-event-notifications
 ```
 
-Generează migration SQL pentru `sarbatori_globale` pe baza datelor din:
+Funcția folosește `SUPABASE_URL` și `SUPABASE_SERVICE_ROLE_KEY`, disponibile automat în mediul Edge Functions — nu trebuie setate manual.
 
-- [calendar.patriarhia.ro](https://calendar.patriarhia.ro/#august)
+## 4. Rulează aplicațiile
+
+```bash
+npm install
+npm run dev:web      # admin web pe http://localhost:3000
+npm run dev:mobile   # Expo — apasă "i" pentru iOS Simulator sau scanează QR cu Expo Go
+```
+
+## 5. Push notifications pe device real (opțional pentru testare locală)
+
+Expo Go poate primi notificări de test, dar pentru build-uri de producție ai nevoie de:
+
+- Cont [EAS](https://expo.dev) + `eas build:configure` (generează `projectId` în `app.json` → `extra.eas.projectId`, folosit de `apps/mobile/lib/push.ts`)
+- Certificat push Apple (APNs) pentru iOS, configurat automat de EAS la primul build
+- Cheie FCM pentru Android, configurată automat de EAS
+
+## 6. Import / refresh calendar liturgic
+
+```bash
+npm run fetch:calendar       # descarcă de pe calendar.patriarhia.ro
+npm run seed:calendar:sql    # regenerează migrația de seed din JSON
+supabase db push             # aplică noul seed
+```
+
+**Limitare cunoscută:** seed-ul curent setează `data_stil_vechi = data_stil_nou` (nu există încă o sursă separată pentru stilul vechi calendaristic) — de rezolvat înainte de a activa parohii cu stil vechi.
+
+## 7. Verificare manuală preoți
+
+La MVP, activarea unei parohii (`status: in_asteptare_verificare → activ`) se face manual, direct din Supabase Table Editor sau SQL Editor, după ce confirmi telefonic/prin email identitatea preotului.
