@@ -28,6 +28,19 @@ npm run dev:web
 npm run dev:mobile
 ```
 
+## Pornire rapidă (doar aplicația de telefon)
+
+```bash
+cd ~/Downloads/parohia-mea
+npm install
+npm run dev:mobile
+```
+
+Apoi:
+
+- apasă `i` în terminal pentru iOS Simulator (Mac)
+- sau scanează QR cu Expo Go pe telefon
+
 ## Environment variables (web)
 
 Creează `apps/web/.env.local`:
