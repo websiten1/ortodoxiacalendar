@@ -18,6 +18,7 @@ import {
   View
 } from "react-native";
 import { isSupabaseConfigured, supabase } from "./supabase";
+import { colors, fonts, radii, shadows, spacing } from "./theme";
 
 type AuthContextValue = {
   session: Session | null;
@@ -141,9 +142,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
               <>
                 <Text style={styles.title}>Autentificare</Text>
                 <Text style={styles.subtitle}>Introdu numărul de telefon ca să continui.</Text>
+                <Text style={styles.fieldLabel}>Număr de telefon</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="+40 7xx xxx xxx"
+                  placeholderTextColor={colors.placeholder}
                   keyboardType="phone-pad"
                   autoFocus
                   value={phone}
@@ -151,7 +154,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 />
                 {error ? <Text style={styles.error}>{error}</Text> : null}
                 <Pressable style={styles.primaryButton} onPress={handleSendCode} disabled={submitting}>
-                  {submitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryButtonText}>Trimite cod</Text>}
+                  {submitting ? (
+                    <ActivityIndicator color={colors.crimsonTextOn} />
+                  ) : (
+                    <Text style={styles.primaryButtonText}>Trimite cod</Text>
+                  )}
                 </Pressable>
                 <Pressable onPress={closeModal} style={styles.cancelButton}>
                   <Text style={styles.cancelButtonText}>Anulează</Text>
@@ -163,9 +170,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
               <>
                 <Text style={styles.title}>Confirmă codul</Text>
                 <Text style={styles.subtitle}>Am trimis un cod de 6 cifre la {phone}.</Text>
+                <Text style={styles.fieldLabel}>Cod de confirmare</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="123456"
+                  placeholderTextColor={colors.placeholder}
                   keyboardType="number-pad"
                   maxLength={6}
                   autoFocus
@@ -174,7 +183,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 />
                 {error ? <Text style={styles.error}>{error}</Text> : null}
                 <Pressable style={styles.primaryButton} onPress={handleConfirmCode} disabled={submitting}>
-                  {submitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryButtonText}>Confirmă</Text>}
+                  {submitting ? (
+                    <ActivityIndicator color={colors.crimsonTextOn} />
+                  ) : (
+                    <Text style={styles.primaryButtonText}>Confirmă</Text>
+                  )}
                 </Pressable>
                 <Pressable onPress={closeModal} style={styles.cancelButton}>
                   <Text style={styles.cancelButtonText}>Anulează</Text>
@@ -199,48 +212,67 @@ export function useAuth() {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(15, 18, 28, 0.45)",
+    backgroundColor: "rgba(44, 38, 32, 0.5)",
     justifyContent: "flex-end"
   },
   sheet: {
-    backgroundColor: "#fff",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 24,
-    gap: 12
+    backgroundColor: colors.parchment,
+    borderTopLeftRadius: radii.lg,
+    borderTopRightRadius: radii.lg,
+    padding: spacing.lg,
+    gap: spacing.sm
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700"
+    fontFamily: fonts.display,
+    fontSize: 24,
+    color: colors.ink
   },
   subtitle: {
-    color: "#5d6678"
+    fontFamily: fonts.body,
+    color: colors.inkMuted,
+    marginBottom: spacing.xs
+  },
+  fieldLabel: {
+    fontFamily: fonts.bodySemiBold,
+    fontSize: 10,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
+    color: colors.inkFaint,
+    marginBottom: 6
   },
   input: {
+    fontFamily: fonts.body,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: "#d5dbe7",
-    borderRadius: 10,
-    padding: 12,
-    fontSize: 16
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    padding: 13,
+    fontSize: 16,
+    color: colors.inkMuted
   },
   error: {
-    color: "#b42318"
+    fontFamily: fonts.body,
+    color: colors.sundayRed
   },
   primaryButton: {
-    backgroundColor: "#1f6feb",
-    borderRadius: 10,
+    backgroundColor: colors.crimson,
+    borderRadius: radii.md,
     paddingVertical: 14,
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: spacing.xs,
+    ...shadows.actionGlow
   },
   primaryButtonText: {
-    color: "#fff",
-    fontWeight: "700"
+    fontFamily: fonts.bodyBold,
+    color: colors.crimsonTextOn,
+    fontSize: 15
   },
   cancelButton: {
     alignItems: "center",
     paddingVertical: 8
   },
   cancelButtonText: {
-    color: "#5d6678"
+    fontFamily: fonts.body,
+    color: colors.inkFaint
   }
 });

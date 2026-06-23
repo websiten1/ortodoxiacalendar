@@ -180,10 +180,10 @@ export default function DashboardProfilPage() {
       <p>Editează datele publice și datele de contact.</p>
 
       {error ? (
-        <p style={{ color: "#b42318", background: "#fef3f2", padding: 10, borderRadius: 8 }}>{error}</p>
+        <p className="banner banner-error">{error}</p>
       ) : null}
       {message ? (
-        <p style={{ color: "#0b7d2a", background: "#eefbf2", padding: 10, borderRadius: 8 }}>{message}</p>
+        <p className="banner banner-success">{message}</p>
       ) : null}
 
       <form onSubmit={handleSubmit} style={{ display: "grid", gap: 10, maxWidth: 640 }}>
@@ -196,7 +196,7 @@ export default function DashboardProfilPage() {
             ) : null}
             <input type="file" accept="image/*" onChange={handleLogoChange} disabled={uploading} />
           </div>
-          {uploading ? <p style={{ margin: "4px 0 0", color: "#5d6678" }}>Se încarcă...</p> : null}
+          {uploading ? <p style={{ margin: "4px 0 0", color: "var(--ink-muted)" }}>Se încarcă...</p> : null}
         </label>
 
         <input

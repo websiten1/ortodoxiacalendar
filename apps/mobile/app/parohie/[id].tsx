@@ -1,17 +1,27 @@
 import { useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Linking, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Linking,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { useAuth } from "../../lib/auth-context";
 import {
+  follow,
   getParish,
   getProgramRecurent,
   getUpcomingEvents,
   isFollowing,
   Parish,
-  follow,
   unfollow
 } from "../../lib/parishes";
 import { registerPushToken } from "../../lib/push";
+import { colors, fonts, radii, shadows, spacing } from "../../lib/theme";
 
 const weekdayLabels: Record<string, string> = {
   luni: "Luni",
@@ -86,16 +96,16 @@ export default function ProfilParohieScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator />
+      <SafeAreaView style={styles.center}>
+        <ActivityIndicator color={colors.crimson} />
       </SafeAreaView>
     );
   }
 
   if (error || !parish) {
     return (
-      <SafeAreaView style={{ flex: 1, padding: 16 }}>
-        <Text style={{ color: "#b42318" }}>{error || "Parohia nu a fost găsită."}</Text>
+      <SafeAreaView style={styles.screen}>
+        <Text style={styles.error}>{error || "Parohia nu a fost găsită."}</Text>
       </SafeAreaView>
     );
   }
@@ -107,78 +117,73 @@ export default function ProfilParohieScreen() {
   }));
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f7f7f8" }}>
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 16 }}>
-        <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#e3e8f2", gap: 6 }}>
-          <Text style={{ fontSize: 22, fontWeight: "700" }}>{parish.nume}</Text>
-          <Text style={{ color: "#576074" }}>
+    <SafeAreaView style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.card}>
+          <Text style={styles.parishName}>{parish.nume}</Text>
+          <Text style={styles.meta}>
             Hram: {parish.hram}
             {parish.data_hram ? ` (${parish.data_hram})` : ""}
           </Text>
           <Pressable
             onPress={handleToggleFollow}
-            style={{
-              marginTop: 10,
-              alignSelf: "flex-start",
-              backgroundColor: following ? "#eefbf2" : "#1f6feb",
-              paddingHorizontal: 16,
-              paddingVertical: 10,
-              borderRadius: 10
-            }}
+            style={[styles.followButton, following ? styles.followButtonActive : null]}
           >
-            <Text style={{ color: following ? "#067647" : "#fff", fontWeight: "700" }}>
+            <Text style={[styles.followButtonText, following ? styles.followButtonTextActive : null]}>
               {following ? "Urmărit ✓ · Nu mai urmări" : "Urmărește"}
             </Text>
           </Pressable>
         </View>
 
-        <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#e3e8f2", gap: 8 }}>
-          <Text style={{ fontWeight: "700" }}>Adresă</Text>
-          <Text>{parish.adresa}, {parish.localitate}, {parish.judet}</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardLabel}>Adresă</Text>
+          <Text style={styles.body}>
+            {parish.adresa}, {parish.localitate}, {parish.judet}
+          </Text>
           <Pressable onPress={openInMaps}>
-            <Text style={{ color: "#1f6feb", fontWeight: "600" }}>Deschide în Maps</Text>
+            <Text style={styles.link}>Deschide în Maps</Text>
           </Pressable>
         </View>
 
-        <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#e3e8f2", gap: 8 }}>
-          <Text style={{ fontWeight: "700" }}>Contact</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardLabel}>Contact</Text>
           {parish.contact_telefon_public ? (
             <Pressable onPress={() => Linking.openURL(`tel:${parish.contact_telefon_public}`)}>
-              <Text style={{ color: "#1f6feb" }}>{parish.contact_telefon_public}</Text>
+              <Text style={styles.link}>{parish.contact_telefon_public}</Text>
             </Pressable>
           ) : null}
           {parish.contact_email_public ? (
             <Pressable onPress={() => Linking.openURL(`mailto:${parish.contact_email_public}`)}>
-              <Text style={{ color: "#1f6feb" }}>{parish.contact_email_public}</Text>
+              <Text style={styles.link}>{parish.contact_email_public}</Text>
             </Pressable>
           ) : null}
           {!parish.contact_telefon_public && !parish.contact_email_public ? (
-            <Text style={{ color: "#8a93a6" }}>Niciun contact public adăugat.</Text>
+            <Text style={styles.muted}>Niciun contact public adăugat.</Text>
           ) : null}
         </View>
 
-        <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#e3e8f2", gap: 10 }}>
-          <Text style={{ fontWeight: "700" }}>Programul săptămânal</Text>
+        <View style={styles.card}>
+          <Text style={styles.cardLabel}>Programul săptămânal</Text>
           {groupedProgram.map((group) =>
             group.entries.length > 0 ? (
-              <View key={group.key}>
-                <Text style={{ fontWeight: "600", marginTop: 6 }}>{group.label}</Text>
+              <View key={group.key} style={{ marginTop: 8 }}>
+                <Text style={styles.dayLabel}>{group.label}</Text>
                 {group.entries.map((entry) => (
-                  <Text key={entry.id} style={{ color: "#576074" }}>
+                  <Text key={entry.id} style={styles.body}>
                     {entry.titlu} — {entry.ora.slice(0, 5)}
                   </Text>
                 ))}
               </View>
             ) : null
           )}
-          {program.length === 0 ? <Text style={{ color: "#8a93a6" }}>Niciun program recurent adăugat.</Text> : null}
+          {program.length === 0 ? <Text style={styles.muted}>Niciun program recurent adăugat.</Text> : null}
         </View>
 
-        <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 16, borderWidth: 1, borderColor: "#e3e8f2", gap: 8 }}>
-          <Text style={{ fontWeight: "700" }}>Evenimente viitoare</Text>
-          {events.length === 0 ? <Text style={{ color: "#8a93a6" }}>Niciun eveniment programat.</Text> : null}
+        <View style={styles.card}>
+          <Text style={styles.cardLabel}>Evenimente viitoare</Text>
+          {events.length === 0 ? <Text style={styles.muted}>Niciun eveniment programat.</Text> : null}
           {events.map((event) => (
-            <Text key={event.id} style={{ color: "#576074" }}>
+            <Text key={event.id} style={styles.reading}>
               {event.data}
               {event.ora ? ` • ${event.ora.slice(0, 5)}` : ""} — {event.titlu}
             </Text>
@@ -188,3 +193,41 @@ export default function ProfilParohieScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.parchment },
+  center: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.parchment },
+  content: { padding: spacing.md, gap: spacing.md },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
+    padding: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.borderAlt,
+    gap: 6
+  },
+  parishName: { fontFamily: fonts.display, fontSize: 22, color: colors.ink },
+  meta: { fontFamily: fonts.body, color: colors.inkMuted },
+  body: { fontFamily: fonts.body, color: colors.inkMuted },
+  muted: { fontFamily: fonts.body, color: colors.inkFaint },
+  reading: { fontFamily: fonts.reading, color: colors.inkMuted, fontSize: 15 },
+  cardLabel: { fontFamily: fonts.bodyBold, color: colors.ink, fontSize: 15 },
+  dayLabel: { fontFamily: fonts.bodySemiBold, color: colors.ink, marginTop: 4 },
+  link: { fontFamily: fonts.bodySemiBold, color: colors.crimson },
+  error: { fontFamily: fonts.body, color: colors.sundayRed, margin: spacing.md },
+  followButton: {
+    marginTop: 10,
+    alignSelf: "flex-start",
+    backgroundColor: colors.crimson,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: radii.md,
+    ...shadows.actionGlow
+  },
+  followButtonActive: {
+    backgroundColor: "#eefbf2",
+    shadowOpacity: 0
+  },
+  followButtonText: { fontFamily: fonts.bodyBold, color: colors.crimsonTextOn },
+  followButtonTextActive: { color: "#067647" }
+});

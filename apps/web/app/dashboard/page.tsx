@@ -23,20 +23,20 @@ function statusBanner(status: ParishStatus, phone: string) {
   if (status === "activ") {
     return {
       text: "Parohia ta e activă și vizibilă în aplicație.",
-      style: { background: "#ecfdf3", borderColor: "#8ad2a5" }
+      className: "banner banner-success"
     };
   }
 
   if (status === "suspendat") {
     return {
       text: "Contul tău e suspendat. Contactează-ne la suport.",
-      style: { background: "#fef3f2", borderColor: "#f3b5b1" }
+      className: "banner banner-error"
     };
   }
 
   return {
     text: `Parohia ta e în verificare. Te vom contacta la ${phone}. Poți completa profilul în acest timp.`,
-    style: { background: "#fffde8", borderColor: "#f4dc8a" }
+    className: "banner banner-warning"
   };
 }
 
@@ -140,7 +140,7 @@ export default function DashboardPage() {
   }
 
   if (error) {
-    return <div className="card" style={{ color: "#b42318" }}>{error}</div>;
+    return <div className="banner banner-error">{error}</div>;
   }
 
   if (!parish) {
@@ -151,21 +151,21 @@ export default function DashboardPage() {
 
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div className="card" style={banner.style}>
+      <div className={banner.className}>
         {banner.text}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
         <div className="card">
-          <p style={{ margin: 0, color: "#667" }}>Număr urmăritori</p>
+          <p style={{ margin: 0, color: "var(--ink-faint)" }}>Număr urmăritori</p>
           <h2>{stats.followers}</h2>
         </div>
         <div className="card">
-          <p style={{ margin: 0, color: "#667" }}>Evenimente luna curentă</p>
+          <p style={{ margin: 0, color: "var(--ink-faint)" }}>Evenimente luna curentă</p>
           <h2>{stats.currentMonthEvents}</h2>
         </div>
         <div className="card">
-          <p style={{ margin: 0, color: "#667" }}>Următorul eveniment</p>
+          <p style={{ margin: 0, color: "var(--ink-faint)" }}>Următorul eveniment</p>
           <h2>{stats.nextEvent}</h2>
         </div>
       </div>

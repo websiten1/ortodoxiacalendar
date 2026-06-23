@@ -113,10 +113,10 @@ export default function DashboardSetariPage() {
   return (
     <div style={{ display: "grid", gap: 16 }}>
       {error ? (
-        <p style={{ color: "#b42318", background: "#fef3f2", padding: 10, borderRadius: 8 }}>{error}</p>
+        <p className="banner banner-error">{error}</p>
       ) : null}
       {message ? (
-        <p style={{ color: "#0b7d2a", background: "#eefbf2", padding: 10, borderRadius: 8 }}>{message}</p>
+        <p className="banner banner-success">{message}</p>
       ) : null}
 
       <div className="card">

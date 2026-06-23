@@ -185,12 +185,12 @@ export default function InregistrarePage() {
         </form>
 
         {message ? (
-          <p style={{ marginTop: 14, color: "#0b7d2a", background: "#eefbf2", padding: 10, borderRadius: 8 }}>
+          <p className="banner banner-success" style={{ marginTop: 14 }}>
             {message}
           </p>
         ) : null}
         {error ? (
-          <p style={{ marginTop: 14, color: "#b42318", background: "#fef3f2", padding: 10, borderRadius: 8 }}>
+          <p className="banner banner-error" style={{ marginTop: 14 }}>
             {error}
           </p>
         ) : null}

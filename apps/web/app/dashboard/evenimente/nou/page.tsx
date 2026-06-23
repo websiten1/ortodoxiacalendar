@@ -114,7 +114,7 @@ export default function DashboardEvenimentNouPage() {
         </label>
 
         {error ? (
-          <p style={{ color: "#b42318", background: "#fef3f2", padding: 10, borderRadius: 8 }}>{error}</p>
+          <p className="banner banner-error">{error}</p>
         ) : null}
 
         <button className="btn btn-primary" style={{ marginTop: 14 }} type="submit" disabled={submitting}>

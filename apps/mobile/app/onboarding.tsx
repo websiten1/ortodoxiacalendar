@@ -12,6 +12,7 @@ import {
   Text,
   View
 } from "react-native";
+import { colors, fonts, radii, shadows, spacing } from "../lib/theme";
 
 const { width } = Dimensions.get("window");
 
@@ -51,6 +52,7 @@ export default function OnboardingScreen() {
         {slides.map((slide) => (
           <View key={slide.title} style={[styles.slide, { width }]}>
             <Text style={styles.title}>Parohia Mea</Text>
+            <View style={styles.divider} />
             <Text style={styles.subtitle}>{slide.title}</Text>
           </View>
         ))}
@@ -72,50 +74,59 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: colors.parchment
   },
   slide: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 32,
-    gap: 16
+    padding: spacing.xl,
+    gap: spacing.md
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700"
+    fontFamily: fonts.display,
+    fontSize: 40,
+    color: colors.crimson
+  },
+  divider: {
+    width: 36,
+    height: 1,
+    backgroundColor: colors.gold
   },
   subtitle: {
-    fontSize: 18,
+    fontFamily: fonts.reading,
+    fontSize: 19,
     textAlign: "center",
-    color: "#3c4456"
+    color: colors.ink,
+    lineHeight: 26
   },
   dots: {
     flexDirection: "row",
     justifyContent: "center",
     gap: 8,
-    marginBottom: 16
+    marginBottom: spacing.md
   },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#d5dbe7"
+    backgroundColor: colors.border
   },
   dotActive: {
-    backgroundColor: "#1f6feb",
+    backgroundColor: colors.crimson,
     width: 20
   },
   button: {
-    backgroundColor: "#1f6feb",
-    borderRadius: 12,
-    marginHorizontal: 24,
-    marginBottom: 32,
+    backgroundColor: colors.crimson,
+    borderRadius: radii.md,
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.xl,
     paddingVertical: 16,
-    alignItems: "center"
+    alignItems: "center",
+    ...shadows.actionGlow
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "700",
+    fontFamily: fonts.bodyBold,
+    color: colors.crimsonTextOn,
     fontSize: 16
   }
 });

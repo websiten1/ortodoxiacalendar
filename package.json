@@ -14,5 +14,8 @@
     "build:web": "npm run build --workspace @parohia-mea/web",
     "fetch:calendar": "node ./scripts/fetch-patriarhia-calendar.mjs",
     "seed:calendar:sql": "node ./scripts/generate-sarbatori-seed.mjs"
+  },
+  "overrides": {
+    "react-native": "0.81.5"
   }
 }

@@ -5,11 +5,13 @@ import {
   FlatList,
   Pressable,
   SafeAreaView,
+  StyleSheet,
   Text,
   View
 } from "react-native";
 import { useAuth } from "../../lib/auth-context";
 import { CalendarDay, getCombinedCalendar, getFollowedParishesForCalendar } from "../../lib/calendar";
+import { colors, fonts, radii, shadows, spacing } from "../../lib/theme";
 
 const PAGE_SIZE = 14;
 
@@ -72,15 +74,10 @@ export default function CalendarulMeuScreen() {
 
   if (!session) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f7f7f8", padding: 16, justifyContent: "center", gap: 16 }}>
-        <Text style={{ fontSize: 20, fontWeight: "700", textAlign: "center" }}>
-          Autentifică-te ca să vezi calendarul tău
-        </Text>
-        <Pressable
-          style={{ backgroundColor: "#1f6feb", borderRadius: 10, paddingVertical: 14, alignItems: "center" }}
-          onPress={() => requireAuth(() => loadInitial())}
-        >
-          <Text style={{ color: "#fff", fontWeight: "700" }}>Autentifică-te</Text>
+      <SafeAreaView style={styles.centerScreen}>
+        <Text style={styles.promptTitle}>Autentifică-te ca să vezi calendarul tău</Text>
+        <Pressable style={styles.primaryButton} onPress={() => requireAuth(() => loadInitial())}>
+          <Text style={styles.primaryButtonText}>Autentifică-te</Text>
         </Pressable>
       </SafeAreaView>
     );
@@ -88,58 +85,43 @@ export default function CalendarulMeuScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator />
+      <SafeAreaView style={styles.centerScreen}>
+        <ActivityIndicator color={colors.crimson} />
       </SafeAreaView>
     );
   }
 
   if (followed.length === 0) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#f7f7f8", padding: 16, justifyContent: "center", gap: 12 }}>
-        <Text style={{ textAlign: "center", color: "#3c4456" }}>
-          Nu urmărești încă nicio parohie. Caută una în tab-ul Descoperă.
-        </Text>
-        <Pressable
-          style={{ backgroundColor: "#1f6feb", borderRadius: 10, paddingVertical: 14, alignItems: "center" }}
-          onPress={() => router.push("/(tabs)")}
-        >
-          <Text style={{ color: "#fff", fontWeight: "700" }}>Descoperă parohii</Text>
+      <SafeAreaView style={styles.centerScreen}>
+        <Text style={styles.promptBody}>Nu urmărești încă nicio parohie. Caută una în tab-ul Descoperă.</Text>
+        <Pressable style={styles.primaryButton} onPress={() => router.push("/(tabs)")}>
+          <Text style={styles.primaryButtonText}>Descoperă parohii</Text>
         </Pressable>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f7f7f8" }}>
-      <View style={{ padding: 16, paddingBottom: 0, gap: 10 }}>
-        <Text style={{ fontSize: 24, fontWeight: "700" }}>Calendarul meu</Text>
-        {error ? <Text style={{ color: "#b42318" }}>{error}</Text> : null}
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.header}>
+        <Text style={styles.heading}>Calendarul meu</Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
         {followed.length > 1 ? (
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+          <View style={styles.filterRow}>
             <Pressable
               onPress={() => setFilterParishId(undefined)}
-              style={{
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                borderRadius: 16,
-                backgroundColor: !filterParishId ? "#1f6feb" : "#eceff4"
-              }}
+              style={[styles.chip, !filterParishId ? styles.chipActive : null]}
             >
-              <Text style={{ color: !filterParishId ? "#fff" : "#1a2233", fontWeight: "600" }}>Toate</Text>
+              <Text style={[styles.chipText, !filterParishId ? styles.chipTextActive : null]}>Toate</Text>
             </Pressable>
             {followed.map((parish) => (
               <Pressable
                 key={parish.id}
                 onPress={() => setFilterParishId(parish.id)}
-                style={{
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: 16,
-                  backgroundColor: filterParishId === parish.id ? "#1f6feb" : "#eceff4"
-                }}
+                style={[styles.chip, filterParishId === parish.id ? styles.chipActive : null]}
               >
-                <Text style={{ color: filterParishId === parish.id ? "#fff" : "#1a2233", fontWeight: "600" }}>
+                <Text style={[styles.chipText, filterParishId === parish.id ? styles.chipTextActive : null]}>
                   {parish.nume}
                 </Text>
               </Pressable>
@@ -151,26 +133,24 @@ export default function CalendarulMeuScreen() {
       <FlatList
         data={days}
         keyExtractor={(item) => item.data}
-        contentContainerStyle={{ padding: 16, gap: 12 }}
+        contentContainerStyle={styles.list}
         onEndReachedThreshold={0.4}
         onEndReached={loadMore}
-        ListFooterComponent={loadingMore ? <ActivityIndicator style={{ marginTop: 12 }} /> : null}
+        ListFooterComponent={loadingMore ? <ActivityIndicator color={colors.crimson} style={{ marginTop: 12 }} /> : null}
         renderItem={({ item }) => (
-          <View style={{ marginBottom: 12 }}>
-            <Text style={{ fontWeight: "700", marginBottom: 6, textTransform: "capitalize" }}>
-              {formatDayLabel(item.data)}
-            </Text>
+          <View style={styles.dayBlock}>
+            <Text style={styles.dayHeading}>{formatDayLabel(item.data)}</Text>
             {item.items.length === 0 ? null : (
-              <View style={{ backgroundColor: "#fff", borderRadius: 12, padding: 12, borderWidth: 1, borderColor: "#e3e8f2", gap: 8 }}>
+              <View style={styles.dayCard}>
                 {item.items.map((calItem, index) => (
-                  <View key={index} style={{ flexDirection: "row", gap: 8, alignItems: "flex-start" }}>
-                    <Text>{calItem.sursa === "global" ? "✝️" : "📌"}</Text>
+                  <View key={index} style={styles.eventRow}>
+                    <Text>{calItem.sursa === "global" ? "✝" : "◆"}</Text>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ color: calItem.sursa === "global" ? "#3c4456" : "#1f6feb" }}>
+                      <Text style={calItem.sursa === "global" ? styles.feastText : styles.eventText}>
                         {calItem.titlu}
                       </Text>
                       {calItem.parohieNume ? (
-                        <Text style={{ color: "#8a93a6", fontSize: 12 }}>
+                        <Text style={styles.eventMeta}>
                           {calItem.parohieNume}
                           {calItem.ora ? ` • ${calItem.ora.slice(0, 5)}` : ""}
                         </Text>
@@ -186,3 +166,56 @@ export default function CalendarulMeuScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.parchment },
+  centerScreen: {
+    flex: 1,
+    backgroundColor: colors.parchment,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: spacing.md,
+    gap: spacing.md
+  },
+  header: { padding: spacing.md, paddingBottom: 0, gap: spacing.sm },
+  heading: { fontFamily: fonts.display, fontSize: 28, color: colors.ink },
+  error: { fontFamily: fonts.body, color: colors.sundayRed },
+  promptTitle: { fontFamily: fonts.display, fontSize: 20, color: colors.ink, textAlign: "center" },
+  promptBody: { fontFamily: fonts.body, color: colors.inkMuted, textAlign: "center" },
+  primaryButton: {
+    backgroundColor: colors.crimson,
+    borderRadius: radii.md,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    alignItems: "center",
+    ...shadows.actionGlow
+  },
+  primaryButtonText: { fontFamily: fonts.bodyBold, color: colors.crimsonTextOn, fontSize: 15 },
+  filterRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  chip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border
+  },
+  chipActive: { backgroundColor: colors.crimson, borderColor: colors.crimson },
+  chipText: { fontFamily: fonts.bodySemiBold, color: colors.inkMuted, fontSize: 13 },
+  chipTextActive: { color: colors.crimsonTextOn },
+  list: { padding: spacing.md, gap: spacing.sm },
+  dayBlock: { marginBottom: 12 },
+  dayHeading: { fontFamily: fonts.bodySemiBold, color: colors.ink, marginBottom: 6, textTransform: "capitalize" },
+  dayCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: colors.borderAlt,
+    gap: 10
+  },
+  eventRow: { flexDirection: "row", gap: 8, alignItems: "flex-start" },
+  feastText: { fontFamily: fonts.reading, color: colors.crimson, fontSize: 15 },
+  eventText: { fontFamily: fonts.bodyMedium, color: colors.ink, fontSize: 14 },
+  eventMeta: { fontFamily: fonts.body, color: colors.inkFaint, fontSize: 12 }
+});

@@ -92,7 +92,7 @@ export default function DashboardEvenimentePage() {
       <div
         key={item.id}
         style={{
-          border: "1px solid #e5e9f2",
+          border: "1px solid var(--border-alt)",
           borderRadius: 10,
           padding: 12,
           display: "grid",
@@ -101,15 +101,15 @@ export default function DashboardEvenimentePage() {
       >
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
           <strong>{item.titlu}</strong>
-          <span style={{ textTransform: "capitalize", color: "#505a70" }}>{item.tip}</span>
+          <span style={{ textTransform: "capitalize", color: "var(--ink-muted)" }}>{item.tip}</span>
         </div>
-        <p style={{ margin: 0, color: "#59637a" }}>
+        <p style={{ margin: 0, color: "var(--ink-muted)" }}>
           {item.data}
           {item.ora ? ` • ${String(item.ora).slice(0, 5)}` : ""}
         </p>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {item.notificare_trimisa ? (
-            <span style={{ color: "#067647", fontWeight: 600 }}>📨 Notificare trimisă</span>
+            <span style={{ color: "var(--ink)", background: "var(--fast-bg)", borderRadius: 6, padding: "2px 8px", fontWeight: 600 }}>📨 Notificare trimisă</span>
           ) : (
             <button className="btn btn-secondary" onClick={() => markNotificationSent(item.id)}>
               Trimite notificare
@@ -132,7 +132,7 @@ export default function DashboardEvenimentePage() {
       </Link>
 
       {error ? (
-        <p style={{ color: "#b42318", background: "#fef3f2", padding: 10, borderRadius: 8, marginTop: 12 }}>
+        <p className="banner banner-error" style={{ marginTop: 12 }}>
           {error}
         </p>
       ) : null}

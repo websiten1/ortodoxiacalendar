@@ -6,6 +6,7 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View
@@ -13,6 +14,7 @@ import {
 import { useAuth } from "../../lib/auth-context";
 import { follow, isFollowing, Parish, searchParishes, unfollow } from "../../lib/parishes";
 import { registerPushToken } from "../../lib/push";
+import { colors, fonts, radii, spacing } from "../../lib/theme";
 import { ONBOARDING_KEY } from "../onboarding";
 
 export default function DescoperaScreen() {
@@ -80,21 +82,22 @@ export default function DescoperaScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f7f7f8" }}>
-      <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
-        <Text style={{ fontSize: 24, fontWeight: "700" }}>Descoperă</Text>
+    <SafeAreaView style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.heading}>Descoperă</Text>
         <TextInput
           placeholder="Caută o parohie (nume, oraș, județ)"
+          placeholderTextColor={colors.placeholder}
           value={query}
           onChangeText={setQuery}
-          style={{ backgroundColor: "#fff", padding: 12, borderRadius: 10, borderWidth: 1, borderColor: "#d5dbe7" }}
+          style={styles.search}
         />
 
-        {loading ? <ActivityIndicator style={{ marginTop: 12 }} /> : null}
-        {error ? <Text style={{ color: "#b42318" }}>{error}</Text> : null}
+        {loading ? <ActivityIndicator color={colors.crimson} style={{ marginTop: 12 }} /> : null}
+        {error ? <Text style={styles.error}>{error}</Text> : null}
 
         {!loading && parishes.length === 0 ? (
-          <Text style={{ color: "#576074", marginTop: 12 }}>
+          <Text style={styles.emptyText}>
             Nu am găsit parohii pentru căutarea ta. Încearcă alt nume sau altă localitate.
           </Text>
         ) : null}
@@ -103,24 +106,23 @@ export default function DescoperaScreen() {
           const following = followedIds.has(item.id);
           return (
             <Link href={`/parohie/${item.id}`} asChild key={item.id}>
-              <Pressable style={{ backgroundColor: "#fff", borderRadius: 12, padding: 14, borderWidth: 1, borderColor: "#e3e8f2" }}>
-                <Text style={{ fontSize: 16, fontWeight: "700" }}>{item.nume}</Text>
-                <Text style={{ color: "#576074", marginTop: 4 }}>
+              <Pressable style={styles.card}>
+                <Text style={styles.cardTitle}>{item.nume}</Text>
+                <Text style={styles.cardMeta}>
                   {item.localitate}, {item.judet}
                 </Text>
-                <Text style={{ color: "#576074", marginTop: 2 }}>Hram: {item.hram}</Text>
-                <View style={{ marginTop: 10 }}>
-                  <Pressable
-                    onPress={(event) => {
-                      event.stopPropagation();
-                      void handleToggleFollow(item);
-                    }}
-                  >
-                    <Text style={{ color: following ? "#067647" : "#1f6feb", fontWeight: "600" }}>
-                      {following ? "Urmărit ✓" : "Urmărește"}
-                    </Text>
-                  </Pressable>
-                </View>
+                <Text style={styles.cardMeta}>Hram: {item.hram}</Text>
+                <Pressable
+                  onPress={(event) => {
+                    event.stopPropagation();
+                    void handleToggleFollow(item);
+                  }}
+                  style={styles.followRow}
+                >
+                  <Text style={[styles.followText, following ? styles.followTextActive : null]}>
+                    {following ? "Urmărit ✓" : "Urmărește"}
+                  </Text>
+                </Pressable>
               </Pressable>
             </Link>
           );
@@ -129,3 +131,32 @@ export default function DescoperaScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.parchment },
+  content: { padding: spacing.md, gap: spacing.sm },
+  heading: { fontFamily: fonts.display, fontSize: 28, color: colors.ink },
+  search: {
+    backgroundColor: colors.surface,
+    padding: 13,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    fontFamily: fonts.body,
+    color: colors.inkMuted
+  },
+  error: { fontFamily: fonts.body, color: colors.sundayRed },
+  emptyText: { fontFamily: fonts.body, color: colors.inkMuted, marginTop: spacing.sm },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: colors.borderAlt
+  },
+  cardTitle: { fontFamily: fonts.display, fontSize: 18, color: colors.ink },
+  cardMeta: { fontFamily: fonts.body, color: colors.inkMuted, marginTop: 4 },
+  followRow: { marginTop: 10, minHeight: 28 },
+  followText: { fontFamily: fonts.bodyBold, color: colors.crimson },
+  followTextActive: { color: "#067647" }
+});

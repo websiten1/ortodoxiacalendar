@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-24T00:00:00.000Z",
+  "title": "Design System: Parohia Mea",
+  "extensions": {
+    "colorMeta": {
+      "crimson": { "role": "primary", "displayName": "Vișiniu / Deep Crimson", "canonical": "oklch(33% 0.12 17)" },
+      "gold": { "role": "secondary", "displayName": "Aur / Gold", "canonical": "oklch(70% 0.09 75)" },
+      "parchment": { "role": "neutral", "displayName": "Parchment", "canonical": "oklch(94% 0.01 80)" },
+      "surface": { "role": "neutral", "displayName": "Surface", "canonical": "oklch(98% 0.005 80)" },
+      "ink": { "role": "neutral", "displayName": "Cerneală / Ink", "canonical": "oklch(24% 0.02 40)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Marcellus Display", "purpose": "Identity moments only: wordmark, screen titles, month names, parish name." },
+      "reading": { "displayName": "Spectral Reading", "purpose": "Feast names and event titles — anywhere the user pauses to read rather than scan." },
+      "body": { "displayName": "Hanken Grotesk Body", "purpose": "All interface chrome: buttons, nav, labels, paragraphs." }
+    },
+    "shadows": [
+      { "name": "action-glow", "value": "0 8px 18px rgba(122, 31, 43, 0.22)", "purpose": "Under primary buttons only, to signal the single primary action per screen." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default easing for state transitions (toggles, button press, screen entry)." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single primary action on a screen (Salvează, Intră în cont, Urmărește).",
+      "html": "<button class=\"ds-btn-primary\">Salvează</button>",
+      "css": ".ds-btn-primary { background: #7a1f2b; color: #f6ecd6; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 14px 20px; border: none; border-radius: 11px; box-shadow: 0 8px 18px rgba(122,31,43,.22); cursor: pointer; transition: background-color .2s cubic-bezier(.4,0,.2,1), transform .2s cubic-bezier(.4,0,.2,1); } .ds-btn-primary:hover { background: #6a1a24; } .ds-btn-primary:focus-visible { outline: 2px solid #7a1f2b; outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:disabled { opacity: .5; box-shadow: none; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outline action, used alongside or instead of the primary button.",
+      "html": "<button class=\"ds-btn-secondary\">Anulează</button>",
+      "css": ".ds-btn-secondary { background: #fdfcf8; color: #7a1f2b; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 14px 20px; border: 1px solid #d8cfbb; border-radius: 11px; cursor: pointer; transition: border-color .2s cubic-bezier(.4,0,.2,1); } .ds-btn-secondary:hover { border-color: #7a1f2b; } .ds-btn-secondary:focus-visible { outline: 2px solid #7a1f2b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form field with uppercase micro-label, used across login, registration, profile forms.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Adresă de email</span><input class=\"ds-input\" type=\"email\" placeholder=\"nume@email.ro\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: 'Hanken Grotesk', system-ui, sans-serif; } .ds-field-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #9a8268; } .ds-input { background: #fdfcf8; border: 1px solid #e0d8c6; border-radius: 12px; padding: 13px 14px; font-size: 14px; color: #5a5046; } .ds-input:focus-visible { border-color: #7a1f2b; border-width: 1.5px; outline: none; } .ds-input::placeholder { color: #b3a892; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard content container sitting one step lighter than the parchment page background.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Parohia Sfântul Nicolae</div><div class=\"ds-card-body\">Cluj-Napoca · Hram 6 decembrie</div></div>",
+      "css": ".ds-card { background: #fdfcf8; border: 1px solid #e6dfce; border-radius: 16px; padding: 16px; font-family: 'Hanken Grotesk', system-ui, sans-serif; } .ds-card-title { font-family: Marcellus, Georgia, serif; font-size: 20px; color: #2c2620; } .ds-card-body { font-size: 13px; color: #8a7458; margin-top: 4px; }"
+    },
+    {
+      "name": "Feast Badge",
+      "kind": "chip",
+      "refersTo": "badge-fast",
+      "description": "Small liturgical-note badge (fasting day, feast type).",
+      "html": "<span class=\"ds-badge ds-badge-fast\">ZI DE POST</span>",
+      "css": ".ds-badge { display: inline-block; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .05em; padding: 3px 8px; border-radius: 6px; } .ds-badge-fast { background: #ece6f5; color: #6a4ea0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Nave",
+    "overview": "Parohia Mea lives on parchment, not on a screen pretending to be one. The system borrows its mood from standing in an empty church nave on a weekday afternoon: cream stone, a little gold catching the light, the deep crimson reserved for the moments that matter — the altar cloth, not the walls. This is the Parchment direction, chosen deliberately over two siblings explored in the same brief: Iconostasis (crimson ground, gold leaf, ornate — too loud for daily use) and Candlelit (near-black with glowing gold — too dark for a screen checked at any hour, and too low-contrast for older users).",
+    "keyCharacteristics": [
+      "Warm parchment ground (#f4f1ea), never stark white, never generic AI beige",
+      "Crimson (#7a1f2b) is the one saturated color and it is rationed",
+      "Gold is rarer still — thin dividers, small dots, never a fill",
+      "One serif for identity (Marcellus), one for reading (Spectral), one sans for UI (Hanken Grotesk)",
+      "Flat by default; the only lift is a crimson-tinted glow under primary buttons"
+    ],
+    "rules": [
+      { "name": "The Legibility Rule", "body": "Ink Faint (#9a8268) never carries text a user must read to complete a task — labels and metadata only.", "section": "colors" },
+      { "name": "The Rationing Rule", "body": "Crimson fills no more than one element per screen at rest.", "section": "colors" },
+      { "name": "The One Serif Per Job Rule", "body": "Marcellus identifies, Spectral narrates, Hanken Grotesk operates — never mix Marcellus and Spectral in the same line.", "section": "typography" },
+      { "name": "The No Card-on-Card Rule", "body": "Never nest a Surface-colored card inside another Surface-colored card; use a divider instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the page background Parchment (#f4f1ea) everywhere; cards and inputs step up to Surface (#fdfcf8), never pure white.",
+      "Do reserve Crimson fills for exactly one primary action per screen.",
+      "Do set feast names and event titles in Spectral.",
+      "Do hold contrast to WCAG AA given the audience includes older, non-technical users.",
+      "Do use 44px-minimum tap targets on mobile."
+    ],
+    "donts": [
+      "Don't build the Iconostasis mood here — no crimson page backgrounds, no gold-leaf ornament.",
+      "Don't build the Candlelit mood here — no near-black surfaces, no glowing text-shadow.",
+      "Don't ship the placeholder generic-SaaS blue (#1f6feb) — it must be fully replaced.",
+      "Don't use gold as a fill for any button or large surface.",
+      "Don't stack a Surface card inside another Surface card.",
+      "Don't mix Marcellus and Spectral within the same line of text."
+    ]
+  }
+}

@@ -138,7 +138,7 @@ export default function DashboardProgramPage() {
       <p>Listă recurentă pe zile + toggle activ/inactiv.</p>
 
       {error ? (
-        <p style={{ color: "#b42318", background: "#fef3f2", padding: 10, borderRadius: 8 }}>{error}</p>
+        <p className="banner banner-error">{error}</p>
       ) : null}
 
       <form onSubmit={handleAdd} style={{ display: "grid", gap: 10, marginBottom: 18 }}>
@@ -187,14 +187,14 @@ export default function DashboardProgramPage() {
               gridTemplateColumns: "1fr auto auto auto",
               gap: 12,
               alignItems: "center",
-              border: "1px solid #e6e9f2",
+              border: "1px solid var(--border-alt)",
               borderRadius: 10,
               padding: 12
             }}
           >
             <div>
               <strong>{item.titlu}</strong>
-              <p style={{ margin: "4px 0 0", color: "#5d6678" }}>
+              <p style={{ margin: "4px 0 0", color: "var(--ink-muted)" }}>
                 {weekdayLabels[item.zi_saptamana]} la {String(item.ora).slice(0, 5)}
               </p>
             </div>
