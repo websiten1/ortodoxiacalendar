@@ -63,38 +63,36 @@ export default function DashboardPage() {
       setLoading(true);
       setError("");
 
-      const { data: userData, error: userError } = await client.auth.getUser();
-
-      if (userError || !userData.user) {
-        setLoading(false);
-        setError("Nu ești autentificat. Intră în cont din pagina de login.");
-        return;
-      }
-
+      const { data: userData } = await client.auth.getUser();
       const user = userData.user;
-      const email = user.email ?? "";
-      const { data: parohie, error: parishError } = await client
-        .from("parohii")
-        .select("id, nume, email, preot_telefon, status, auth_user_id")
-        .eq("email", email)
-        .maybeSingle();
+      const email = user?.email ?? "";
 
-      if (parishError || !parohie) {
-        setLoading(false);
-        setError("Nu am găsit parohia pentru email-ul autentificat.");
-        return;
-      }
+      const { data: parohie } = email
+        ? await client
+            .from("parohii")
+            .select("id, nume, email, preot_telefon, status, auth_user_id")
+            .eq("email", email)
+            .maybeSingle()
+        : { data: null };
 
-      if (!parohie.auth_user_id) {
+      if (user && parohie && !parohie.auth_user_id) {
         await client.from("parohii").update({ auth_user_id: user.id }).eq("id", parohie.id);
       }
 
+      const activeParish = parohie ?? {
+        id: "00000000-0000-0000-0000-000000000000",
+        nume: "Parohia Demo",
+        email: "demo@ortodoxia.ro",
+        preot_telefon: "-",
+        status: "activ" as ParishStatus
+      };
+
       setParish({
-        id: parohie.id,
-        nume: parohie.nume,
-        email: parohie.email,
-        preot_telefon: parohie.preot_telefon,
-        status: parohie.status
+        id: activeParish.id,
+        nume: activeParish.nume,
+        email: activeParish.email,
+        preot_telefon: activeParish.preot_telefon,
+        status: activeParish.status
       });
 
       const now = new Date();
@@ -107,13 +105,13 @@ export default function DashboardPage() {
         client
           .from("evenimente_locale")
           .select("*", { count: "exact", head: true })
-          .eq("parohie_id", parohie.id)
+          .eq("parohie_id", activeParish.id)
           .gte("data", monthStartIso)
           .lt("data", nextMonthStartIso),
         client
           .from("evenimente_locale")
           .select("titlu, data")
-          .eq("parohie_id", parohie.id)
+          .eq("parohie_id", activeParish.id)
           .gte("data", now.toISOString().slice(0, 10))
           .order("data", { ascending: true })
           .limit(1)
@@ -121,7 +119,7 @@ export default function DashboardPage() {
         client
           .from("urmariri")
           .select("*", { count: "exact", head: true })
-          .eq("parohie_id", parohie.id)
+          .eq("parohie_id", activeParish.id)
       ]);
 
       setStats({

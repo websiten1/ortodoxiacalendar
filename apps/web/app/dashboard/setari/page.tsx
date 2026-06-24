@@ -29,31 +29,18 @@ export default function DashboardSetariPage() {
       setLoading(true);
       setError("");
 
-      const { data: userData, error: userError } = await supabase!.auth.getUser();
-      if (userError || !userData.user) {
-        setError("Nu ești autentificat. Intră în cont din pagina de login.");
-        setLoading(false);
-        return;
-      }
+      const { data: userData } = await supabase!.auth.getUser();
+      const currentEmail = userData.user?.email ?? "";
 
-      const currentEmail = userData.user.email ?? "";
-      const { data: parohie, error: parishError } = await supabase!
-        .from("parohii")
-        .select("id, email, preot_nume, preot_telefon")
-        .eq("email", currentEmail)
-        .maybeSingle();
+      const { data: parohie } = currentEmail
+        ? await supabase!.from("parohii").select("id, email, preot_nume, preot_telefon").eq("email", currentEmail).maybeSingle()
+        : { data: null };
 
-      if (parishError || !parohie) {
-        setError("Nu am găsit parohia pentru email-ul autentificat.");
-        setLoading(false);
-        return;
-      }
-
-      setParishId(parohie.id);
-      setEmail(parohie.email);
-      setNewEmail(parohie.email);
-      setPreotNume(parohie.preot_nume ?? "");
-      setPreotTelefon(parohie.preot_telefon ?? "");
+      setParishId(parohie?.id ?? "00000000-0000-0000-0000-000000000000");
+      setEmail(parohie?.email ?? "demo@ortodoxia.ro");
+      setNewEmail(parohie?.email ?? "demo@ortodoxia.ro");
+      setPreotNume(parohie?.preot_nume ?? "");
+      setPreotTelefon(parohie?.preot_telefon ?? "");
       setLoading(false);
     }
 

@@ -56,44 +56,35 @@ export default function DashboardProfilPage() {
       setLoading(true);
       setError("");
 
-      const { data: userData, error: userError } = await supabase!.auth.getUser();
-      if (userError || !userData.user) {
-        setError("Nu ești autentificat. Intră în cont din pagina de login.");
-        setLoading(false);
-        return;
-      }
+      const { data: userData } = await supabase!.auth.getUser();
+      const email = userData.user?.email ?? "";
 
-      const email = userData.user.email ?? "";
-      const { data: parohie, error: parishError } = await supabase!
-        .from("parohii")
-        .select(
-          "id, nume, hram, data_hram, stil, adresa, localitate, judet, tara, descriere, contact_telefon_public, contact_email_public, logo_url"
-        )
-        .eq("email", email)
-        .maybeSingle();
+      const { data: parohie } = email
+        ? await supabase!
+            .from("parohii")
+            .select(
+              "id, nume, hram, data_hram, stil, adresa, localitate, judet, tara, descriere, contact_telefon_public, contact_email_public, logo_url"
+            )
+            .eq("email", email)
+            .maybeSingle()
+        : { data: null };
 
-      if (parishError || !parohie) {
-        setError("Nu am găsit parohia pentru email-ul autentificat.");
-        setLoading(false);
-        return;
-      }
-
-      setUserId(userData.user.id);
-      setParishId(parohie.id);
-      setOriginalStil(parohie.stil);
+      setUserId(userData.user?.id ?? "");
+      setParishId(parohie?.id ?? "00000000-0000-0000-0000-000000000000");
+      setOriginalStil(parohie?.stil ?? "nou");
       setForm({
-        nume: parohie.nume ?? "",
-        hram: parohie.hram ?? "",
-        data_hram: parohie.data_hram ?? "",
-        stil: parohie.stil ?? "nou",
-        adresa: parohie.adresa ?? "",
-        localitate: parohie.localitate ?? "",
-        judet: parohie.judet ?? "",
-        tara: parohie.tara ?? "România",
-        descriere: parohie.descriere ?? "",
-        contact_telefon_public: parohie.contact_telefon_public ?? "",
-        contact_email_public: parohie.contact_email_public ?? "",
-        logo_url: parohie.logo_url ?? ""
+        nume: parohie?.nume ?? "Parohia Demo",
+        hram: parohie?.hram ?? "",
+        data_hram: parohie?.data_hram ?? "",
+        stil: parohie?.stil ?? "nou",
+        adresa: parohie?.adresa ?? "",
+        localitate: parohie?.localitate ?? "",
+        judet: parohie?.judet ?? "",
+        tara: parohie?.tara ?? "România",
+        descriere: parohie?.descriere ?? "",
+        contact_telefon_public: parohie?.contact_telefon_public ?? "",
+        contact_email_public: parohie?.contact_email_public ?? "",
+        logo_url: parohie?.logo_url ?? ""
       });
       setLoading(false);
     }

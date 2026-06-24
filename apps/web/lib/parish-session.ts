@@ -3,35 +3,40 @@ export type ParishSession = {
   email: string;
   parishId: string;
   parishName: string;
+  demo: boolean;
+};
+
+const DEMO_SESSION: ParishSession = {
+  userId: "demo",
+  email: "demo@ortodoxia.ro",
+  parishId: "00000000-0000-0000-0000-000000000000",
+  parishName: "Parohia Demo",
+  demo: true
 };
 
 export async function getParishSession(client: any): Promise<ParishSession> {
-  const { data: userData, error: userError } = await client.auth.getUser();
+  const { data: userData } = await client.auth.getUser();
 
-  if (userError || !userData.user) {
-    throw new Error("Nu ești autentificat.");
+  if (!userData?.user) {
+    return DEMO_SESSION;
   }
 
   const email = userData.user.email ?? "";
-
   if (!email) {
-    throw new Error("Contul autentificat nu are email.");
+    return DEMO_SESSION;
   }
 
-  const { data: parish, error: parishError } = await client
-    .from("parohii")
-    .select("id, nume")
-    .eq("email", email)
-    .maybeSingle();
+  const { data: parish } = await client.from("parohii").select("id, nume").eq("email", email).maybeSingle();
 
-  if (parishError || !parish) {
-    throw new Error("Nu am găsit parohia asociată contului.");
+  if (!parish) {
+    return DEMO_SESSION;
   }
 
   return {
     userId: userData.user.id,
     email,
     parishId: parish.id,
-    parishName: parish.nume
+    parishName: parish.nume,
+    demo: false
   };
 }

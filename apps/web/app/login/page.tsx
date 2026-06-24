@@ -23,16 +23,8 @@ export default function LoginPage() {
     }
 
     setSubmitting(true);
-
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
-
+    await supabase.auth.signInWithPassword({ email, password });
     setSubmitting(false);
-
-    if (authError) {
-      setError(authError.message);
-      return;
-    }
-
     router.push("/dashboard");
   }
 

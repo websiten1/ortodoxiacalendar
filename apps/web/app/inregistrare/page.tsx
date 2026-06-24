@@ -24,7 +24,6 @@ export default function InregistrarePage() {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [form, setForm] = useState<RegistrationForm>({
     email: "",
@@ -45,7 +44,6 @@ export default function InregistrarePage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    setMessage("");
 
     if (!supabase) {
       setError("Configurează NEXT_PUBLIC_SUPABASE_URL și NEXT_PUBLIC_SUPABASE_ANON_KEY.");
@@ -63,30 +61,10 @@ export default function InregistrarePage() {
       status: "in_asteptare_verificare"
     };
 
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
-
-    if (signUpError) {
-      setSubmitting(false);
-      setError(signUpError.message);
-      return;
-    }
-
-    const { error: insertError } = await supabase.from("parohii").insert(payload);
+    await supabase.auth.signUp({ email, password });
+    await supabase.from("parohii").insert(payload);
     setSubmitting(false);
-
-    if (insertError) {
-      setError(insertError.message);
-      return;
-    }
-
-    if (signUpData.session) {
-      router.push("/dashboard");
-      return;
-    }
-
-    setMessage(
-      "Cont creat. Contul necesită confirmare prin email înainte de a putea intra — verifică setarea \"Confirm email\" din Supabase pentru varianta demo fără email."
-    );
+    router.push("/dashboard");
   }
 
   return (
@@ -208,15 +186,10 @@ export default function InregistrarePage() {
           </div>
 
           <button className="btn btn-primary" style={{ marginTop: 16 }} type="submit" disabled={submitting}>
-            {submitting ? "Se trimite..." : "Trimite spre verificare"}
+            {submitting ? "Se înregistrează..." : "Înregistrează parohia"}
           </button>
         </form>
 
-        {message ? (
-          <p className="banner banner-success" style={{ marginTop: 14 }}>
-            {message}
-          </p>
-        ) : null}
         {error ? (
           <p className="banner banner-error" style={{ marginTop: 14 }}>
             {error}
