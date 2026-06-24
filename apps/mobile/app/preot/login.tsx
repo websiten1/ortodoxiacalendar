@@ -7,11 +7,11 @@ import { colors, fonts, radii, shadows, spacing } from "../../lib/theme";
 
 export default function PreotLoginScreen() {
   const router = useRouter();
-  const { session, signInWithEmailLink } = useAuth();
+  const { session, signInWithPassword } = useAuth();
   const { parish, loading: loadingParish } = usePriestParish();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -20,62 +20,58 @@ export default function PreotLoginScreen() {
     }
   }, [session, loadingParish, parish, router]);
 
-  async function handleSendLink() {
+  async function handleLogin() {
     setError("");
-    if (!email.trim()) {
-      setError("Introdu adresa de email cu care ai înregistrat parohia.");
+    if (!email.trim() || !password) {
+      setError("Introdu emailul și parola contului parohiei.");
       return;
     }
 
     setSubmitting(true);
-    const { error: sendError } = await signInWithEmailLink(email.trim());
+    const { error: loginError } = await signInWithPassword(email.trim(), password);
     setSubmitting(false);
 
-    if (sendError) {
-      setError(sendError);
-      return;
+    if (loginError) {
+      setError(loginError);
     }
-
-    setSent(true);
   }
 
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.content}>
         <Text style={styles.title}>Administrează parohia</Text>
-        <Text style={styles.subtitle}>
-          Introdu emailul cu care ai înregistrat parohia. Îți trimitem un link de autentificare — deschide-l pe
-          acest telefon.
-        </Text>
+        <Text style={styles.subtitle}>Intră cu emailul și parola cu care ai înregistrat parohia.</Text>
 
-        {!sent ? (
-          <>
-            <Text style={styles.fieldLabel}>Adresă de email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="preot@parohie.ro"
-              placeholderTextColor={colors.placeholder}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
-            />
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            <Pressable style={styles.primaryButton} onPress={handleSendLink} disabled={submitting}>
-              {submitting ? (
-                <ActivityIndicator color={colors.crimsonTextOn} />
-              ) : (
-                <Text style={styles.primaryButtonText}>Trimite link</Text>
-              )}
-            </Pressable>
-          </>
-        ) : (
-          <View style={styles.sentBox}>
-            <Text style={styles.sentText}>
-              Am trimis un link pe {email}. Deschide email-ul pe acest telefon și apasă pe link pentru a continua.
-            </Text>
-          </View>
-        )}
+        <Text style={styles.fieldLabel}>Adresă de email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="preot@parohie.ro"
+          placeholderTextColor={colors.placeholder}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+        />
+
+        <Text style={styles.fieldLabel}>Parolă</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="••••••••"
+          placeholderTextColor={colors.placeholder}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+
+        <Pressable style={styles.primaryButton} onPress={handleLogin} disabled={submitting}>
+          {submitting ? (
+            <ActivityIndicator color={colors.crimsonTextOn} />
+          ) : (
+            <Text style={styles.primaryButtonText}>Intră în cont</Text>
+          )}
+        </Pressable>
 
         <Pressable onPress={() => router.back()} style={styles.cancelButton}>
           <Text style={styles.cancelButtonText}>‹ Înapoi</Text>
@@ -96,7 +92,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     textTransform: "uppercase",
     color: colors.inkFaint,
-    marginBottom: 6
+    marginBottom: 6,
+    marginTop: 6
   },
   input: {
     fontFamily: fonts.body,
@@ -118,8 +115,6 @@ const styles = StyleSheet.create({
     ...shadows.actionGlow
   },
   primaryButtonText: { fontFamily: fonts.bodyBold, color: colors.crimsonTextOn, fontSize: 15 },
-  sentBox: { backgroundColor: colors.fastBg, borderRadius: radii.md, padding: 14 },
-  sentText: { fontFamily: fonts.body, color: colors.fastText, lineHeight: 20 },
   cancelButton: { alignItems: "center", paddingVertical: 16 },
   cancelButtonText: { fontFamily: fonts.body, color: colors.inkFaint }
 });

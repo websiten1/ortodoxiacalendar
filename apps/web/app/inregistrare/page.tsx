@@ -1,10 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "../../lib/supabase-browser";
 
 type RegistrationForm = {
   email: string;
+  password: string;
   preot_nume: string;
   preot_telefon: string;
   nume: string;
@@ -20,11 +22,13 @@ type RegistrationForm = {
 
 export default function InregistrarePage() {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [form, setForm] = useState<RegistrationForm>({
     email: "",
+    password: "",
     preot_nume: "",
     preot_telefon: "",
     nume: "",
@@ -50,12 +54,22 @@ export default function InregistrarePage() {
 
     setSubmitting(true);
 
+    const { email, password, ...rest } = form;
     const payload = {
-      ...form,
+      ...rest,
+      email,
       data_hram: form.data_hram || null,
       descriere: form.descriere || null,
       status: "in_asteptare_verificare"
     };
+
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+
+    if (signUpError) {
+      setSubmitting(false);
+      setError(signUpError.message);
+      return;
+    }
 
     const { error: insertError } = await supabase.from("parohii").insert(payload);
     setSubmitting(false);
@@ -65,8 +79,13 @@ export default function InregistrarePage() {
       return;
     }
 
+    if (signUpData.session) {
+      router.push("/dashboard");
+      return;
+    }
+
     setMessage(
-      "Cererea ta a fost înregistrată. Te vom contacta pentru verificare în maximum câteva zile."
+      "Cont creat. Contul necesită confirmare prin email înainte de a putea intra — verifică setarea \"Confirm email\" din Supabase pentru varianta demo fără email."
     );
   }
 
@@ -86,6 +105,15 @@ export default function InregistrarePage() {
               required
               value={form.email}
               onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+            />
+            <input
+              className="input"
+              type="password"
+              placeholder="Parolă"
+              required
+              minLength={6}
+              value={form.password}
+              onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
             />
             <input
               className="input"

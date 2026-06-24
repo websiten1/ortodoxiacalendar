@@ -1,20 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 import { getSupabaseBrowserClient } from "../../lib/supabase-browser";
 
 export default function LoginPage() {
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
+  const router = useRouter();
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    setMessage("");
 
     if (!supabase) {
       setError("Configurează NEXT_PUBLIC_SUPABASE_URL și NEXT_PUBLIC_SUPABASE_ANON_KEY.");
@@ -23,13 +24,7 @@ export default function LoginPage() {
 
     setSubmitting(true);
 
-    const redirectTo =
-      typeof window !== "undefined" ? `${window.location.origin}/dashboard` : undefined;
-
-    const { error: authError } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: redirectTo }
-    });
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
     setSubmitting(false);
 
@@ -38,14 +33,14 @@ export default function LoginPage() {
       return;
     }
 
-    setMessage(`Am trimis un link pe ${email}. Verifică-ți inboxul.`);
+    router.push("/dashboard");
   }
 
   return (
     <div className="container" style={{ maxWidth: 560, paddingTop: 64 }}>
       <div className="card">
         <h1>Autentificare</h1>
-        <p>Introdu email-ul și primești link magic de autentificare.</p>
+        <p>Introdu email-ul și parola contului parohiei.</p>
 
         <form onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
@@ -59,16 +54,24 @@ export default function LoginPage() {
             onChange={(event) => setEmail(event.target.value)}
           />
 
+          <label htmlFor="password" style={{ marginTop: 12, display: "block" }}>
+            Parolă
+          </label>
+          <input
+            id="password"
+            className="input"
+            type="password"
+            placeholder="••••••••"
+            required
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+
           <button className="btn btn-primary" style={{ marginTop: 16 }} type="submit" disabled={submitting}>
-            {submitting ? "Se trimite..." : "Trimite link de autentificare"}
+            {submitting ? "Se autentifică..." : "Intră în cont"}
           </button>
         </form>
 
-        {message ? (
-          <p className="banner banner-success" style={{ marginTop: 14 }}>
-            {message}
-          </p>
-        ) : null}
         {error ? (
           <p className="banner banner-error" style={{ marginTop: 14 }}>
             {error}
