@@ -153,7 +153,7 @@ export default function DashboardPage() {
         {banner.text}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
+      <div className="stat-grid">
         <div className="card">
           <p style={{ margin: 0, color: "var(--ink-faint)" }}>Număr urmăritori</p>
           <h2>{stats.followers}</h2>

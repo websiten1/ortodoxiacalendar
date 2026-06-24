@@ -6,7 +6,7 @@ export default function LandingPage() {
       <div className="card">
         <h1>Ortodoxia</h1>
         <p>Calendarul și anunțurile parohiei tale, într-un singur loc.</p>
-        <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+        <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
           <Link href="/login" className="btn btn-primary">
             Intră în cont
           </Link>

@@ -149,7 +149,7 @@ export default function DashboardProgramPage() {
           value={form.titlu}
           onChange={(event) => setForm((prev) => ({ ...prev, titlu: event.target.value }))}
         />
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 140px", gap: 10 }}>
+        <div className="program-add-row">
           <select
             className="input"
             value={form.zi_saptamana}
@@ -180,18 +180,7 @@ export default function DashboardProgramPage() {
 
       <div style={{ display: "grid", gap: 10 }}>
         {entries.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr auto auto auto",
-              gap: 12,
-              alignItems: "center",
-              border: "1px solid var(--border-alt)",
-              borderRadius: 10,
-              padding: 12
-            }}
-          >
+          <div key={item.id} className="program-entry-row">
             <div>
               <strong>{item.titlu}</strong>
               <p style={{ margin: "4px 0 0", color: "var(--ink-muted)" }}>
