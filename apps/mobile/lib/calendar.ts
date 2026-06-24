@@ -5,6 +5,7 @@ export type CalendarItem = {
   titlu: string;
   ora: string | null;
   parohieNume?: string;
+  eventId?: string;
 };
 
 export type CalendarDay = {
@@ -22,6 +23,25 @@ function addDays(date: Date, days: number) {
   const next = new Date(date);
   next.setDate(next.getDate() + days);
   return next;
+}
+
+export type DaySarbatoare = {
+  nume_sarbatoare: string;
+  subtitlu: string | null;
+  sinaxar_text: string | null;
+  tip: string;
+  zi_libera: boolean;
+};
+
+export async function getDaySarbatoare(dateIso: string): Promise<DaySarbatoare | null> {
+  const { data, error } = await supabase
+    .from("sarbatori_globale")
+    .select("nume_sarbatoare, subtitlu, sinaxar_text, tip, zi_libera")
+    .eq("data_stil_nou", dateIso)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data;
 }
 
 export async function getFollowedParishesForCalendar(userId: string) {
@@ -68,7 +88,7 @@ export async function getCombinedCalendar(
       ),
     supabase
       .from("evenimente_locale")
-      .select("titlu, data, ora, parohie_id, parohii(nume)")
+      .select("id, titlu, data, ora, parohie_id, parohii(nume)")
       .in("parohie_id", parishIds)
       .gte("data", rangeStart)
       .lte("data", rangeEnd),
@@ -102,7 +122,8 @@ export async function getCombinedCalendar(
         sursa: "local_eveniment",
         titlu: event.titlu,
         ora: event.ora,
-        parohieNume: (event as any).parohii?.nume
+        parohieNume: (event as any).parohii?.nume,
+        eventId: event.id
       });
     }
   }

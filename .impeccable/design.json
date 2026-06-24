@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-06-24T00:00:00.000Z",
-  "title": "Design System: Parohia Mea",
+  "title": "Design System: Ortodoxia",
   "extensions": {
     "colorMeta": {
       "crimson": { "role": "primary", "displayName": "Vișiniu / Deep Crimson", "canonical": "oklch(33% 0.12 17)" },
@@ -67,7 +67,7 @@
   ],
   "narrative": {
     "northStar": "The Quiet Nave",
-    "overview": "Parohia Mea lives on parchment, not on a screen pretending to be one. The system borrows its mood from standing in an empty church nave on a weekday afternoon: cream stone, a little gold catching the light, the deep crimson reserved for the moments that matter — the altar cloth, not the walls. This is the Parchment direction, chosen deliberately over two siblings explored in the same brief: Iconostasis (crimson ground, gold leaf, ornate — too loud for daily use) and Candlelit (near-black with glowing gold — too dark for a screen checked at any hour, and too low-contrast for older users).",
+    "overview": "Ortodoxia lives on parchment, not on a screen pretending to be one. The system borrows its mood from standing in an empty church nave on a weekday afternoon: cream stone, a little gold catching the light, the deep crimson reserved for the moments that matter — the altar cloth, not the walls. This is the Parchment direction, chosen deliberately over two siblings explored in the same brief: Iconostasis (crimson ground, gold leaf, ornate — too loud for daily use) and Candlelit (near-black with glowing gold — too dark for a screen checked at any hour, and too low-contrast for older users).",
     "keyCharacteristics": [
       "Warm parchment ground (#f4f1ea), never stark white, never generic AI beige",
       "Crimson (#7a1f2b) is the one saturated color and it is rationed",

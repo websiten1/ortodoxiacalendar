@@ -1,4 +1,4 @@
-import { useFocusEffect } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, SafeAreaView, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useAuth } from "../../lib/auth-context";
@@ -116,9 +116,16 @@ export default function SetariScreen() {
           </>
         )}
 
+        <Link href="/preot/login" asChild>
+          <Pressable style={styles.card}>
+            <Text style={styles.cardLabel}>Ești preot?</Text>
+            <Text style={styles.muted}>Administrează parohia →</Text>
+          </Pressable>
+        </Link>
+
         <View style={styles.card}>
           <Text style={styles.cardLabel}>Despre</Text>
-          <Text style={styles.muted}>Parohia Mea v0.1.0</Text>
+          <Text style={styles.muted}>Ortodoxia v0.1.0</Text>
         </View>
 
         {session ? (

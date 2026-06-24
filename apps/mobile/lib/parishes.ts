@@ -16,6 +16,28 @@ export type Parish = {
   logo_url: string | null;
 };
 
+export type EventDetail = {
+  id: string;
+  titlu: string;
+  descriere: string | null;
+  data: string;
+  ora: string | null;
+  tip: "liturgic" | "social" | "anunt";
+  parohie_id: string;
+  parohii: { nume: string; preot_nume: string } | null;
+};
+
+export async function getEventDetail(eventId: string) {
+  const { data, error } = await supabase
+    .from("evenimente_locale")
+    .select("id, titlu, descriere, data, ora, tip, parohie_id, parohii(nume, preot_nume)")
+    .eq("id", eventId)
+    .maybeSingle();
+
+  if (error) throw new Error(error.message);
+  return data as unknown as EventDetail | null;
+}
+
 export async function searchParishes(query: string, judet?: string) {
   let builder = supabase
     .from("parohii")

@@ -1,13 +1,19 @@
 {
   "expo": {
-    "name": "Parohia Mea",
-    "slug": "parohia-mea",
-    "scheme": "parohiamea",
+    "name": "Ortodoxia",
+    "slug": "ortodoxia",
+    "scheme": "ortodoxia",
     "version": "0.1.0",
     "orientation": "portrait",
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Ortodoxia are nevoie de acces la calendar pentru a adăuga evenimentele parohiei tale."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

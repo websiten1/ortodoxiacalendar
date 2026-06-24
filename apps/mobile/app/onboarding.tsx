@@ -51,7 +51,7 @@ export default function OnboardingScreen() {
       >
         {slides.map((slide) => (
           <View key={slide.title} style={[styles.slide, { width }]}>
-            <Text style={styles.title}>Parohia Mea</Text>
+            <Text style={styles.title}>Ortodoxia</Text>
             <View style={styles.divider} />
             <Text style={styles.subtitle}>{slide.title}</Text>
           </View>

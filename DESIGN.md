@@ -1,5 +1,5 @@
 ---
-name: Parohia Mea
+name: Ortodoxia
 description: Calm parchment-and-crimson design system for an Orthodox parish directory and liturgical calendar
 colors:
   parchment: "#f4f1ea"
@@ -77,13 +77,13 @@ components:
     padding: "{spacing.md}"
 ---
 
-# Design System: Parohia Mea
+# Design System: Ortodoxia
 
 ## 1. Overview
 
 **Creative North Star: "The Quiet Nave"**
 
-Parohia Mea lives on parchment, not on a screen pretending to be one. The system borrows its mood from standing in an empty church nave on a weekday afternoon: cream stone, a little gold catching the light, the deep crimson reserved for the moments that matter — the altar cloth, not the walls. This is the **Parchment** direction, chosen deliberately over two siblings explored in the same brief: **Iconostasis** (crimson ground, gold leaf, ornate — too loud for daily use) and **Candlelit** (near-black with glowing gold — too dark for a screen checked at any hour, and too low-contrast for older users). Parchment won because the product is read daily, briefly, often by people who are not technical and not all young.
+Ortodoxia lives on parchment, not on a screen pretending to be one. The system borrows its mood from standing in an empty church nave on a weekday afternoon: cream stone, a little gold catching the light, the deep crimson reserved for the moments that matter — the altar cloth, not the walls. This is the **Parchment** direction, chosen deliberately over two siblings explored in the same brief: **Iconostasis** (crimson ground, gold leaf, ornate — too loud for daily use) and **Candlelit** (near-black with glowing gold — too dark for a screen checked at any hour, and too low-contrast for older users). Parchment won because the product is read daily, briefly, often by people who are not technical and not all young.
 
 Density stays low and text stays large. The serif display face (Marcellus) appears only at moments of identity — the parish name, the month, the app's own name — never in body copy. Crimson and gold are accents, not backgrounds; the page itself stays a calm, warm neutral so the few colored elements (a primary button, today's date, a feast name) actually read as important.
 

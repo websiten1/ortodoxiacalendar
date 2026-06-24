@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Parohia Mea - Admin",
+  title: "Ortodoxia - Admin",
   description: "Admin web pentru gestionarea parohiei"
 };
 

@@ -18,7 +18,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", minHeight: "100vh" }}>
       <aside style={{ borderRight: "1px solid var(--border-alt)", padding: "24px 16px", background: "var(--surface)" }}>
-        <h2 style={{ marginTop: 0, marginBottom: 20, color: "var(--crimson)" }}>Parohia Mea</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 20, color: "var(--crimson)" }}>Ortodoxia</h2>
         <nav style={{ display: "grid", gap: 4 }}>
           {items.map((item) => {
             const isActive = pathname === item.href;

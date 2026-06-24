@@ -1,4 +1,4 @@
-# Parohia Mea
+# Ortodoxia
 
 MVP construit conform `docs/SPEC-FUNCTIONALA-BUILD.md`. Toate cele 8 etape din `docs/IMPLEMENTARE.md` (schema, admin web, app mobilă, auth, calendar combinat, push) sunt implementate în cod. Ce rămâne sunt pașii legați de cont (Supabase, Apple/Google) descriși mai jos — nu pot fi automatizați fără credențialele tale.
 

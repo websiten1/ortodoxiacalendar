@@ -4,7 +4,7 @@ export default function LandingPage() {
   return (
     <div className="container" style={{ paddingTop: 72 }}>
       <div className="card">
-        <h1>Parohia Mea</h1>
+        <h1>Ortodoxia</h1>
         <p>Calendarul și anunțurile parohiei tale, într-un singur loc.</p>
         <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
           <Link href="/login" className="btn btn-primary">

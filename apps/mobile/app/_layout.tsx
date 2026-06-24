@@ -37,6 +37,13 @@ export default function RootLayout() {
             headerTintColor: colors.crimson
           }}
         />
+        <Stack.Screen name="zi/[data]" options={{ headerShown: false }} />
+        <Stack.Screen name="eveniment/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="preot/login" options={{ headerShown: false }} />
+        <Stack.Screen name="preot/index" options={{ headerShown: false }} />
+        <Stack.Screen name="preot/eveniment-nou" options={{ headerShown: false }} />
+        <Stack.Screen name="preot/profil" options={{ headerShown: false }} />
+        <Stack.Screen name="preot/program" options={{ headerShown: false }} />
       </Stack>
     </AuthProvider>
   );

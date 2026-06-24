@@ -31,13 +31,16 @@ async function main() {
     const year = Number(entry.data_zilei.slice(0, 4));
     const tip = inferTip(entry.titlu_text ?? "");
     const title = escapeSql((entry.titlu_text ?? "").slice(0, 1000));
+    const subtitlu = escapeSql((entry.subtitlu ?? "").slice(0, 500));
+    const sinaxar = escapeSql((entry.sinaxar_text ?? "").slice(0, 8000));
+    const ziLibera = entry.zi_libera ? "true" : "false";
 
-    return `('${dataNou}'::date, '${dataNou}'::date, '${title}', '${tip}', ${year})`;
+    return `('${dataNou}'::date, '${dataNou}'::date, '${title}', '${tip}', ${year}, '${subtitlu}', '${sinaxar}', ${ziLibera})`;
   });
 
   const sql = [
     "-- Auto-generated from Patriarhia calendar feed",
-    "insert into public.sarbatori_globale (data_stil_nou, data_stil_vechi, nume_sarbatoare, tip, an)",
+    "insert into public.sarbatori_globale (data_stil_nou, data_stil_vechi, nume_sarbatoare, tip, an, subtitlu, sinaxar_text, zi_libera)",
     "values",
     values.join(",\n"),
     "on conflict do nothing;"

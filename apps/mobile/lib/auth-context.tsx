@@ -1,4 +1,5 @@
 import type { Session } from "@supabase/supabase-js";
+import * as Linking from "expo-linking";
 import {
   createContext,
   PropsWithChildren,
@@ -20,11 +21,14 @@ import {
 import { isSupabaseConfigured, supabase } from "./supabase";
 import { colors, fonts, radii, shadows, spacing } from "./theme";
 
+const PRIEST_AUTH_REDIRECT = Linking.createURL("auth-callback");
+
 type AuthContextValue = {
   session: Session | null;
   loading: boolean;
   requireAuth: (onAuthenticated: () => void | Promise<void>) => void;
   signOut: () => Promise<void>;
+  signInWithEmailLink: (email: string) => Promise<{ error: string | null }>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -56,7 +60,31 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setSession(nextSession);
     });
 
-    return () => subscription.subscription.unsubscribe();
+    async function handleIncomingUrl(url: string | null) {
+      if (!url) return;
+      const { queryParams } = Linking.parse(url);
+      const code = queryParams?.code;
+      if (typeof code === "string") {
+        await supabase.auth.exchangeCodeForSession(code);
+      }
+    }
+
+    Linking.getInitialURL().then(handleIncomingUrl);
+    const linkingSubscription = Linking.addEventListener("url", (event) => handleIncomingUrl(event.url));
+
+    return () => {
+      subscription.subscription.unsubscribe();
+      linkingSubscription.remove();
+    };
+  }, []);
+
+  const signInWithEmailLink = useCallback(async (email: string) => {
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: PRIEST_AUTH_REDIRECT }
+    });
+
+    return { error: otpError?.message ?? null };
   }, []);
 
   const requireAuth = useCallback(
@@ -132,7 +160,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, loading, requireAuth, signOut }}>
+    <AuthContext.Provider value={{ session, loading, requireAuth, signOut, signInWithEmailLink }}>
       {children}
 
       <Modal visible={step !== "closed"} animationType="slide" transparent onRequestClose={closeModal}>

@@ -1,5 +1,6 @@
 export const colors = {
   parchment: "#f4f1ea",
+  screenBg: "#ffffff",
   ink: "#2c2620",
   inkMuted: "#5a5046",
   inkFaint: "#9a8268",
@@ -7,19 +8,23 @@ export const colors = {
   crimson: "#7a1f2b",
   crimsonHover: "#6a1a24",
   crimsonTextOn: "#f6ecd6",
+  crimsonTint: "#f6e8e6",
   gold: "#c9a24b",
   goldBright: "#e8c66a",
   surface: "#fdfcf8",
+  surfaceAlt: "#fafaf7",
   border: "#e0d8c6",
-  borderAlt: "#e6dfce",
+  borderAlt: "#efece4",
   borderStrong: "#d8cfbb",
   sundayRed: "#b9322f",
+  ordinaryBlue: "#2c4a8a",
   fastBg: "#ece6f5",
   fastText: "#6a4ea0",
   upcomingText: "#b9892f",
-  upcomingBg: "#f4ecdb",
-  upcomingBorder: "#e6dca0",
-  placeholder: "#b3a892"
+  upcomingBg: "#faf2df",
+  upcomingBorder: "#f0e6cf",
+  placeholder: "#b3a892",
+  priestBg: "#2c2620"
 } as const;
 
 export const fonts = {

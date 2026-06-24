@@ -15,7 +15,7 @@ Ambele audiențe se așteaptă la un ton tradițional ortodox, nu corporate sau 
 
 ## Product Purpose
 
-Parohia Mea e un director național de parohii ortodoxe românești + calendar liturgic personalizat + notificări. Diferențiatorul nu e calendarul liturgic în sine (există deja aplicația oficială a Patriarhiei), ci profilul parohiei + programul ei specific + evenimentele locale + notificările legate de "parohia mea". Succesul = preotul actualizează programul fără frustrare, enoriașul deschide aplicația și știe imediat ce e azi la parohia lui.
+Ortodoxia e un director național de parohii ortodoxe românești + calendar liturgic personalizat + notificări. Diferențiatorul nu e calendarul liturgic în sine (există deja aplicația oficială a Patriarhiei), ci profilul parohiei + programul ei specific + evenimentele locale + notificările legate de "parohia mea". Succesul = preotul actualizează programul fără frustrare, enoriașul deschide aplicația și știe imediat ce e azi la parohia lui.
 
 ## Brand Personality
 
