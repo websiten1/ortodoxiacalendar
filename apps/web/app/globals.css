@@ -75,15 +75,21 @@ a {
   min-height: 100vh;
 }
 
+.dashboard-shell > * {
+  min-width: 0;
+}
+
 .dashboard-sidebar {
   border-right: 1px solid var(--border-alt);
   padding: 24px 16px;
   background: var(--surface);
+  min-width: 0;
 }
 
 .dashboard-nav {
   display: grid;
   gap: 4px;
+  min-width: 0;
 }
 
 .dashboard-nav-link {
@@ -148,7 +154,24 @@ a {
   }
 
   .container {
-    padding: 16px;
+    padding: 16px !important;
+    padding-top: 16px !important;
+    max-width: 100% !important;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  button[type="submit"].btn-primary,
+  a.btn-primary,
+  a.btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 1.5rem;
   }
 }
 
